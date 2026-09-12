@@ -1,7 +1,11 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function Home() {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const { data: todos, error } = await supabase
     .from("todos")
     .select("id, title, is_complete")
@@ -10,9 +14,38 @@ export default async function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex w-full max-w-xl flex-col gap-6 px-6 py-16">
-        <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-zinc-50">
-          Next.js + Supabase
-        </h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-zinc-50">
+            Next.js + Supabase
+          </h1>
+          {user ? (
+            <form action="/logout" method="post">
+              <button
+                type="submit"
+                className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm text-black dark:border-zinc-700 dark:text-white"
+              >
+                Sign out
+              </button>
+            </form>
+          ) : (
+            <Link
+              href="/login"
+              className="rounded-lg bg-black px-3 py-1.5 text-sm font-medium text-white dark:bg-white dark:text-black"
+            >
+              Sign in
+            </Link>
+          )}
+        </div>
+
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          {user ? (
+            <>
+              Signed in as <span className="font-medium">{user.email}</span>
+            </>
+          ) : (
+            "Not signed in."
+          )}
+        </p>
 
         {error ? (
           <div className="rounded-lg border border-red-300 bg-red-50 p-4 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
