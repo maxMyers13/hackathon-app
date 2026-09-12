@@ -82,6 +82,10 @@ Open [http://localhost:3000](http://localhost:3000). You should see two seeded t
 - Need it in a Client Component? `import { createClient } from "@/lib/supabase/client"`.
 - To require sign-in on a page, redirect in the page itself (see `src/app/login/page.tsx` for the pattern) — the proxy only refreshes the session, it doesn't gate routes.
 
+## Working with an AI agent? Use the worktree-pr skill
+
+This repo ships a Claude Code skill at [`.claude/skills/worktree-pr/`](./.claude/skills/worktree-pr/SKILL.md). Run `/worktree-pr` (or just ask Claude to "package this into a worktree PR") whenever you're about to have an agent make a change — it branches off `main` into a separate `git worktree`, does the work there, verifies it builds, and opens a PR, instead of editing your main checkout directly. Read the skill file for the full rationale — it's short and worth understanding before tonight, not just running blind.
+
 ## Deploying
 
 Free-tier friendly options: [Vercel](https://vercel.com/new) (built for Next.js) or [Netlify](https://www.netlify.com/). Whichever you pick, set the same three environment variables from `.env.local` in its dashboard — the app won't connect to Supabase without them.
